@@ -43,14 +43,18 @@ function setupSoundEngine() {
     try {
         soundEnabled = JSON.parse(localStorage.getItem('soundEnabled') ?? 'true');
     } catch (_) { soundEnabled = true; }
-    // ユーザー操作で初期化：初回クリックでAudioContextを作る
+    // ユーザー操作で初期化：初回操作でAudioContextを作る
     const resume = () => {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
         document.removeEventListener('click', resume);
+        document.removeEventListener('pointerdown', resume);
+        document.removeEventListener('keydown', resume);
     };
     document.addEventListener('click', resume, { once: true });
+    document.addEventListener('pointerdown', resume, { once: true });
+    document.addEventListener('keydown', resume, { once: true });
 }
 
 function setupSoundToggle() {
@@ -73,6 +77,16 @@ function setupSoundToggle() {
         soundEnabled = !soundEnabled;
         localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled));
         applyIcon();
+        // ONにしたときはAudioContextを確実に作って確認音
+        if (soundEnabled) {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            } else if (audioCtx.state === 'suspended') {
+                audioCtx.resume && audioCtx.resume();
+            }
+            // 確認音
+            setTimeout(() => playClick(900, 0.04, 0.03), 50);
+        }
     });
 }
 
