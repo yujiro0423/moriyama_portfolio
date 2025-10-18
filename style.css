@@ -5,22 +5,23 @@
 
 /* カスタムプロパティ（CSS変数） */
 :root {
-    --primary-color: #00ffff;
-    --secondary-color: #ff0080;
-    --accent-color: #8a2be2;
-    --neon-green: #39ff14;
-    --neon-pink: #ff10f0;
-    --dark-bg: #0a0a0a;
-    --dark-surface: #111111;
-    --dark-surface-light: #1a1a1a;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-muted: #888888;
-    --border-color: #333333;
-    --shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-    --glow: 0 0 30px rgba(0, 255, 255, 0.5);
-    --pink-glow: 0 0 30px rgba(255, 16, 240, 0.5);
-    --green-glow: 0 0 30px rgba(57, 255, 20, 0.5);
+    --primary-color: #6b7280;
+    --secondary-color: #9ca3af;
+    --accent-color: #4f46e5;
+    --highlight-color: #10b981;
+    --warning-color: #f59e0b;
+    --dark-bg: #1f2937;
+    --dark-surface: #374151;
+    --dark-surface-light: #4b5563;
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+    --text-muted: #9ca3af;
+    --border-color: #6b7280;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    --subtle-glow: 0 0 10px rgba(107, 114, 128, 0.2);
+    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
 /* 基本設定 */
@@ -44,18 +45,17 @@ body {
 
 /* ヘッダー・ナビゲーション */
 .navbar {
-    background-color: rgba(10, 10, 10, 0.95);
+    background-color: rgba(31, 41, 55, 0.95);
     backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.3s ease;
-    box-shadow: 0 2px 20px rgba(0, 255, 255, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
-    color: var(--primary-color) !important;
-    text-shadow: 0 0 10px var(--primary-color);
+    color: var(--text-primary) !important;
 }
 
 .nav-link {
@@ -63,12 +63,10 @@ body {
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
 }
 
 .nav-link:hover {
     color: var(--primary-color) !important;
-    text-shadow: 0 0 10px var(--primary-color);
 }
 
 .nav-link::after {
@@ -78,10 +76,9 @@ body {
     height: 2px;
     bottom: -5px;
     left: 50%;
-    background: linear-gradient(90deg, var(--primary-color), var(--neon-pink));
+    background: var(--primary-color);
     transition: all 0.3s ease;
     transform: translateX(-50%);
-    box-shadow: 0 0 10px var(--primary-color);
 }
 
 .nav-link:hover::after {
@@ -90,7 +87,7 @@ body {
 
 /* ヒーローセクション */
 .hero {
-    background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -105,14 +102,14 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(0,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(107,114,128,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
     pointer-events: none;
-    animation: gridGlow 4s ease-in-out infinite alternate;
+    animation: subtleGrid 8s ease-in-out infinite alternate;
 }
 
-@keyframes gridGlow {
-    0% { opacity: 0.3; }
-    100% { opacity: 0.6; }
+@keyframes subtleGrid {
+    0% { opacity: 0.3; transform: translateX(0); }
+    100% { opacity: 0.6; transform: translateX(10px); }
 }
 
 .hero::after {
@@ -122,9 +119,16 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 30% 60%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 40%, rgba(255, 16, 240, 0.1) 0%, transparent 50%);
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
     pointer-events: none;
+    animation: floatingColors 12s ease-in-out infinite alternate;
+}
+
+@keyframes floatingColors {
+    0% { transform: rotate(0deg) scale(1); }
+    100% { transform: rotate(5deg) scale(1.1); }
 }
 
 .hero-content {
@@ -137,32 +141,60 @@ body {
     height: 250px;
     border-radius: 50%;
     border: 3px solid var(--primary-color);
-    box-shadow: var(--shadow), var(--glow), inset 0 0 50px rgba(0, 255, 255, 0.2);
+    box-shadow: var(--shadow), var(--subtle-glow);
     object-fit: cover;
-    transition: all 0.3s ease;
-    background: radial-gradient(circle, rgba(0, 255, 255, 0.1), transparent);
+    transition: all 0.4s ease;
+    background: var(--gradient-1);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-img::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(79, 70, 229, 0.3), transparent, rgba(16, 185, 129, 0.3), transparent);
+    animation: rotateGradient 6s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotateGradient {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .profile-img:hover {
-    transform: scale(1.05);
-    box-shadow: var(--shadow), 0 0 50px var(--primary-color), inset 0 0 50px rgba(0, 255, 255, 0.3);
+    transform: scale(1.05) rotate(3deg);
+    box-shadow: var(--shadow), 0 0 30px rgba(79, 70, 229, 0.4);
+    border-color: var(--accent-color);
 }
 
 .hero h1 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--neon-pink), var(--neon-green));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-    animation: textGlow 3s ease-in-out infinite alternate;
+    color: var(--text-primary);
+    position: relative;
+    display: inline-block;
 }
 
-@keyframes textGlow {
-    0% { filter: brightness(1); }
-    100% { filter: brightness(1.2); }
+.hero h1::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--gradient-1);
+    animation: underlineExpand 2s ease-out 0.5s forwards;
+}
+
+@keyframes underlineExpand {
+    0% { width: 0; }
+    100% { width: 100%; }
 }
 
 .hero .subtitle {
@@ -170,17 +202,15 @@ body {
     font-weight: 300;
     margin-bottom: 2rem;
     opacity: 0.9;
-    text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
-    color: var(--text-primary);
+    color: var(--text-secondary);
 }
 
 .hero .lead {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     padding: 1.5rem;
     border-radius: 10px;
-    border: 1px solid rgba(0, 255, 255, 0.2);
+    border: 1px solid rgba(107, 114, 128, 0.3);
 }
 
 /* セクション共通スタイル */
@@ -194,12 +224,21 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 3rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--neon-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 20px var(--primary-color);
+    color: var(--text-primary);
     position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    z-index: -1;
 }
 
 .section-title::after {
@@ -210,34 +249,33 @@ body {
     transform: translateX(-50%);
     width: 100px;
     height: 2px;
-    background: linear-gradient(90deg, var(--primary-color), var(--neon-pink));
-    box-shadow: 0 0 10px var(--primary-color);
+    background: var(--gradient-1);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: translateX(-50%) scaleX(1); }
+    50% { opacity: 0.7; transform: translateX(-50%) scaleX(1.2); }
 }
 
 .section-dark {
     background-color: var(--dark-surface);
-    background-image: 
-        radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 16, 240, 0.05) 0%, transparent 50%);
 }
 
 .section-light {
     background-color: var(--dark-bg);
-    background-image: 
-        radial-gradient(circle at 30% 30%, rgba(57, 255, 20, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
 }
 
 /* カード */
 .card-custom {
-    background: rgba(26, 26, 26, 0.8);
+    background: rgba(75, 85, 99, 0.8);
     backdrop-filter: blur(15px);
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--border-color);
     border-radius: 15px;
     padding: 2rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     height: 100%;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden;
 }
@@ -249,8 +287,8 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-    transition: left 0.8s;
+    background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
+    transition: left 0.6s ease;
 }
 
 .card-custom:hover::before {
@@ -258,28 +296,23 @@ body {
 }
 
 .card-custom:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow), var(--glow);
-    border-color: var(--neon-pink);
-    background: rgba(26, 26, 26, 0.9);
+    transform: translateY(-8px) rotateX(5deg);
+    box-shadow: var(--shadow), 0 0 25px rgba(79, 70, 229, 0.2);
+    border-color: var(--accent-color);
+    background: rgba(75, 85, 99, 0.9);
 }
 
 /* 可読性向上のためのテキストスタイル */
 .card-custom p {
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-    background: rgba(0, 0, 0, 0.2);
-    padding: 0.5rem;
-    border-radius: 5px;
-    border-left: 3px solid var(--primary-color);
+    color: var(--text-secondary);
 }
 
 .card-custom .text-muted {
-    color: var(--text-secondary) !important;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-    background: rgba(0, 0, 0, 0.4);
+    color: var(--text-muted) !important;
+    background: rgba(0, 0, 0, 0.2);
     padding: 1rem;
     border-radius: 8px;
-    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-left: 3px solid var(--primary-color);
 }
 
 /* スキルプログレスバー */
@@ -292,24 +325,22 @@ body {
     justify-content: space-between;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    color: var(--text-primary);
 }
 
 .progress-custom {
     height: 12px;
-    background-color: var(--dark-surface);
+    background-color: var(--dark-surface-light);
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid var(--border-color);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .progress-bar-custom {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), var(--neon-pink), var(--neon-green));
+    background: var(--gradient-1);
     border-radius: 10px;
-    transition: width 1s ease-in-out;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+    transition: width 1.5s ease-in-out;
     position: relative;
     overflow: hidden;
 }
@@ -321,8 +352,8 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    animation: progressShine 2s infinite;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressShine 2.5s infinite;
 }
 
 @keyframes progressShine {
@@ -330,27 +361,36 @@ body {
     100% { left: 100%; }
 }
 
+.progress-bar-custom::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.skill-item:hover .progress-bar-custom::after {
+    opacity: 1;
+}
+
 /* ボタン */
 .btn-custom {
-    background: linear-gradient(45deg, var(--primary-color), var(--neon-pink));
+    background: var(--gradient-1);
     border: none;
-    color: var(--dark-bg);
+    color: var(--text-primary);
     padding: 12px 30px;
-    border-radius: 50px;
+    border-radius: 25px;
     font-weight: 600;
     text-decoration: none;
     display: inline-block;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-    text-shadow: none;
-}
-
-.btn-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow), 0 0 30px var(--primary-color);
-    color: var(--dark-bg);
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
 }
 
 .btn-custom::before {
@@ -360,34 +400,57 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s;
+    background: var(--gradient-2);
+    transition: left 0.4s ease;
+    z-index: -1;
 }
 
 .btn-custom:hover::before {
-    left: 100%;
+    left: 0;
+}
+
+.btn-custom:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+    color: var(--text-primary);
 }
 
 .btn-outline-custom {
     background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
+    border: 2px solid;
+    border-image: var(--gradient-1) 1;
+    color: var(--accent-color);
     padding: 10px 28px;
-    border-radius: 50px;
+    border-radius: 25px;
     font-weight: 600;
     text-decoration: none;
     display: inline-block;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    text-shadow: 0 0 10px var(--primary-color);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-outline-custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-1);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.btn-outline-custom:hover::before {
+    opacity: 1;
 }
 
 .btn-outline-custom:hover {
-    background: var(--primary-color);
-    color: var(--dark-bg);
-    transform: translateY(-2px);
-    box-shadow: 0 0 25px var(--primary-color);
-    text-shadow: none;
+    color: var(--text-primary);
+    transform: translateY(-3px) scale(1.05);
+    border-color: transparent;
 }
 
 /* ソーシャルリンク */
@@ -408,17 +471,34 @@ body {
     color: var(--text-secondary);
     border-radius: 50%;
     text-decoration: none;
-    transition: all 0.3s ease;
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    transition: all 0.4s ease;
+    border: 2px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-3);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.social-link:hover::before {
+    opacity: 1;
 }
 
 .social-link:hover {
-    background: var(--primary-color);
-    color: var(--dark-bg);
-    transform: translateY(-3px) scale(1.1);
-    box-shadow: var(--shadow), 0 0 25px var(--primary-color);
-    border-color: var(--neon-pink);
+    color: var(--text-primary);
+    transform: translateY(-5px) rotateY(15deg);
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    border-color: transparent;
 }
 
 /* アニメーション */
@@ -479,20 +559,20 @@ body {
 
 /* ポートフォリオギャラリー */
 .portfolio-item {
-    background: rgba(26, 26, 26, 0.8);
+    background: rgba(75, 85, 99, 0.8);
     backdrop-filter: blur(15px);
     border-radius: 15px;
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--border-color);
     margin-bottom: 2rem;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .portfolio-item:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow), 0 0 30px var(--primary-color);
-    border-color: var(--neon-pink);
+    box-shadow: var(--shadow);
+    border-color: var(--primary-color);
 }
 
 .portfolio-item img {
@@ -500,12 +580,10 @@ body {
     height: 200px;
     object-fit: cover;
     transition: transform 0.3s ease;
-    filter: brightness(0.8) contrast(1.2);
 }
 
 .portfolio-item:hover img {
     transform: scale(1.05);
-    filter: brightness(1) contrast(1.3);
 }
 
 .portfolio-content {
@@ -517,23 +595,20 @@ body {
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
 .portfolio-description {
     color: var(--text-secondary);
     font-size: 0.9rem;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
 }
 
 /* フッター */
 footer {
     background-color: var(--dark-surface);
-    border-top: 1px solid var(--primary-color);
+    border-top: 1px solid var(--border-color);
     padding: 2rem 0;
     text-align: center;
     color: var(--text-muted);
-    box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.2);
 }
 
 footer a {
@@ -543,76 +618,7 @@ footer a {
 }
 
 footer a:hover {
-    color: var(--neon-pink);
-    text-shadow: 0 0 10px var(--neon-pink);
-}
-
-/* グリッチエフェクト */
-.glitch {
-    position: relative;
-    display: inline-block;
-}
-
-.glitch::before,
-.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.glitch::before {
-    animation: glitch-1 0.5s infinite;
-    color: var(--neon-pink);
-    z-index: -1;
-}
-
-.glitch::after {
-    animation: glitch-2 0.5s infinite;
-    color: var(--primary-color);
-    z-index: -2;
-}
-
-@keyframes glitch-1 {
-    0%, 14%, 15%, 49%, 50%, 99%, 100% {
-        transform: translate(0, 0);
-    }
-    1%, 13% {
-        transform: translate(-2px, 1px);
-    }
-    16%, 48% {
-        transform: translate(1px, -1px);
-    }
-}
-
-@keyframes glitch-2 {
-    0%, 14%, 15%, 49%, 50%, 99%, 100% {
-        transform: translate(0, 0);
-    }
-    1%, 13% {
-        transform: translate(1px, -1px);
-    }
-    16%, 48% {
-        transform: translate(-1px, 1px);
-    }
-}
-
-/* アングラ要素の追加 */
-.neon-text {
-    color: var(--primary-color);
-    text-shadow: 
-        0 0 5px var(--primary-color),
-        0 0 10px var(--primary-color),
-        0 0 15px var(--primary-color),
-        0 0 20px var(--primary-color);
-    animation: neonFlicker 2s infinite alternate;
-}
-
-@keyframes neonFlicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+    color: var(--accent-color);
 }
 
 /* スクロールバーのカスタマイズ */
@@ -625,12 +631,174 @@ footer a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(var(--primary-color), var(--neon-pink));
-    border-radius: 10px;
+    background: var(--gradient-1);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(var(--neon-pink), var(--primary-color));
+    background: var(--gradient-2);
+}
+
+/* 面白い視覚効果の追加 */
+.floating-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: float 15s infinite linear;
+}
+
+.shape:nth-child(1) {
+    width: 20px;
+    height: 20px;
+    background: var(--gradient-1);
+    border-radius: 50%;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.shape:nth-child(2) {
+    width: 30px;
+    height: 30px;
+    background: var(--gradient-2);
+    transform: rotate(45deg);
+    top: 60%;
+    left: 80%;
+    animation-delay: -5s;
+}
+
+.shape:nth-child(3) {
+    width: 15px;
+    height: 15px;
+    background: var(--gradient-3);
+    border-radius: 50%;
+    top: 80%;
+    left: 20%;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* タイピングエフェクト */
+.typing-effect {
+    border-right: 2px solid var(--accent-color);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { border-color: var(--accent-color); }
+    51%, 100% { border-color: transparent; }
+}
+
+/* ホバー時の魅力的なエフェクト */
+.icon-bounce {
+    transition: transform 0.3s ease;
+}
+
+.icon-bounce:hover {
+    animation: bounceIcon 0.6s ease;
+}
+
+@keyframes bounceIcon {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* パーティクルエフェクト風の背景 */
+.particle-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: particleMove 20s infinite linear;
+}
+
+.particle:nth-child(even) {
+    background: var(--highlight-color);
+    animation-duration: 25s;
+}
+
+@keyframes particleMove {
+    0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-10vh) translateX(100px);
+        opacity: 0;
+    }
+}
+
+/* スムーズなスクロール連動エフェクト */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+
+.scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* グラデーションテキストエフェクト */
+.gradient-text {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(45deg); }
 }
 
 /* ローディングアニメーション */

@@ -14,6 +14,12 @@
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
+    <!-- 浮遊する図形 -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
@@ -58,11 +64,11 @@
         <div class="container hero-content">
             <div class="row align-items-center">
                 <div class="col-lg-6 text-center text-lg-start fade-in-up">
-                    <h1 class="glitch" data-text="森山 湧二郎">森山 湧二郎</h1>
-                    <p class="subtitle">もりもり | Developer & Musician</p>
+                    <h1>森山 湧二郎</h1>
+                    <p class="subtitle typing-effect">もりもり | Developer & Musician</p>
                     <p class="lead mb-4">
                         プログラミングと音楽を愛するおおよそ開発者と呼べる人物。<br>
-                        いつの日か、創造的で機能的なWebアプリケーションの開発ができることを目指して。
+                        いつの日か、<span class="gradient-text">創造的で機能的な</span>Webアプリケーションの開発ができることを目指して。
                     </p>
                     <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
                         <a href="#about" class="btn btn-custom">詳しく見る</a>
@@ -94,18 +100,18 @@
                             プログラミングと音楽を通じて、創造的な表現を追求している開発者です。
                         </p>
                         <div class="row text-center">
-                            <div class="col-md-4 mb-3">
-                                <i class="bi bi-code-slash display-4 text-primary mb-3"></i>
+                            <div class="col-md-4 mb-3 scroll-reveal">
+                                <i class="bi bi-code-slash display-4 text-primary mb-3 icon-bounce"></i>
                                 <h5>プログラミング</h5>
                                 <p>VBA、Python、C#、Web技術を学習中</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <i class="bi bi-music-note-beamed display-4 text-primary mb-3"></i>
+                            <div class="col-md-4 mb-3 scroll-reveal">
+                                <i class="bi bi-music-note-beamed display-4 text-primary mb-3 icon-bounce"></i>
                                 <h5>音楽活動</h5>
                                 <p>ポップス・ロックバンドでギター担当</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <i class="bi bi-book display-4 text-primary mb-3"></i>
+                            <div class="col-md-4 mb-3 scroll-reveal">
+                                <i class="bi bi-book display-4 text-primary mb-3 icon-bounce"></i>
                                 <h5>読書</h5>
                                 <p>自己啓発、ビジネス書、技術書</p>
                             </div>
@@ -175,7 +181,7 @@
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="card-custom">
-                        <h4><i class="bi bi-people me-2 neon-text"></i>バンド活動</h4>
+                        <h4><i class="bi bi-people me-2"></i>バンド活動</h4>
                         <p><strong>ジャンル:</strong> ポップス・ロック</p>
                         <p><strong>編成:</strong> 初心者が集まったバンド</p>
                         <p><strong>バンド名:</strong> 未定</p>
@@ -184,7 +190,7 @@
                 </div>
                 <div class="col-lg-6 mb-4">
                     <div class="card-custom">
-                        <h4><i class="bi bi-guitar me-2 neon-text"></i>使用楽器</h4>
+                        <h4><i class="bi bi-guitar me-2"></i>使用楽器</h4>
                         <div class="mb-3">
                             <strong>フジゲン レスポール</strong>
                             <p class="text-muted">メインギターとして愛用</p>
