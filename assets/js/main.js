@@ -134,33 +134,33 @@ function setupInteractiveEffects() {
     // カードのマウス追従エフェクト
     const cards = document.querySelectorAll('.card-custom');
     cards.forEach(card => {
+        // contactセクション内のカードは除外
+        if (card.closest('#contact')) return;
+
         card.addEventListener('mousemove', function(e) {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            
+
             const rotateX = (y - centerY) / 10;
             const rotateY = (centerX - x) / 10;
-            
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
-        
+
         card.addEventListener('mouseleave', function() {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            card.style.transform = '';
         });
     });
-    
+
     // アイコンのクリックエフェクト
     const icons = document.querySelectorAll('.icon-bounce');
     icons.forEach(icon => {
         icon.addEventListener('click', function() {
-            this.style.animation = 'none';
-            setTimeout(() => {
-                this.style.animation = 'bounceIcon 0.6s ease';
-            }, 10);
+            icon.classList.add('clicked');
+            setTimeout(() => icon.classList.remove('clicked'), 300);
         });
     });
 }
