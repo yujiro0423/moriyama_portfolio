@@ -14,12 +14,6 @@
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <!-- 浮遊する図形 -->
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
@@ -55,6 +49,9 @@
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                 </ul>
+                <button class="btn btn-sm btn-outline-custom ms-3" id="sound-toggle" aria-label="Toggle sound">
+                    <i class="bi bi-volume-mute"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -69,6 +66,9 @@
                     <p class="lead mb-4">
                         プログラミングと音楽を愛するおおよそ開発者と呼べる人物。<br>
                         いつの日か、<span class="gradient-text">創造的で機能的な</span>Webアプリケーションの開発ができることを目指して。
+                    </p>
+                    <p class="text-muted mb-3" style="font-family: Consolas, 'Fira Code', Menlo, monospace; color: var(--text-secondary) !important;">
+                        <span style="color: var(--primary-color);">$</span> whoami <span style="color: var(--primary-color);">&&</span> echo "developer | musician"
                     </p>
                     <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
                         <a href="#about" class="btn btn-custom">詳しく見る</a>

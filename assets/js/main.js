@@ -28,8 +28,71 @@ function initializePortfolio() {
     setupScrollReveal();
     setupTypingEffect();
     setupParticleBackground();
+    setupSoundEngine();
+    setupSoundToggle();
     
     console.log('✨ Portfolio initialized with awesome effects! ✨');
+}
+
+/**
+ * サウンドエンジン（タイプ音・ブリンク音）
+ */
+let audioCtx;
+let soundEnabled = true;
+function setupSoundEngine() {
+    try {
+        soundEnabled = JSON.parse(localStorage.getItem('soundEnabled') ?? 'true');
+    } catch (_) { soundEnabled = true; }
+    // ユーザー操作で初期化：初回クリックでAudioContextを作る
+    const resume = () => {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        document.removeEventListener('click', resume);
+    };
+    document.addEventListener('click', resume, { once: true });
+}
+
+function setupSoundToggle() {
+    const btn = document.getElementById('sound-toggle');
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    const applyIcon = () => {
+        if (soundEnabled) {
+            icon.classList.remove('bi-volume-mute');
+            icon.classList.add('bi-volume-up');
+            btn.setAttribute('aria-label', 'Sound on');
+        } else {
+            icon.classList.remove('bi-volume-up');
+            icon.classList.add('bi-volume-mute');
+            btn.setAttribute('aria-label', 'Sound off');
+        }
+    };
+    applyIcon();
+    btn.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled));
+        applyIcon();
+    });
+}
+
+// 簡易シンセ：短いクリック音（キータイプ）とクリック音（ブリンク）
+function playClick(freq = 800, duration = 0.03, gain = 0.03) {
+    if (!soundEnabled || !audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    g.gain.setValueAtTime(gain, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(g).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+}
+
+function playBlink() {
+    // 低めの周波数で短い音
+    playClick(300, 0.02, 0.02);
 }
 
 /**
@@ -108,12 +171,21 @@ function setupTypingEffect() {
         if (index < text.length) {
             typingElement.textContent += text.charAt(index);
             index++;
-            setTimeout(typeCharacter, 100);
+            // タイプ音
+            playClick(700 + Math.random()*200, 0.025, 0.025);
+            setTimeout(typeCharacter, 90 + Math.random()*60);
         }
     };
     
     // 少し遅延してからタイピングを開始
     setTimeout(typeCharacter, 1000);
+
+    // カーソル点滅に合わせて微音（30fps程度は重いのでsetIntervalで控えめ）
+    let blinkOn = false;
+    setInterval(() => {
+        blinkOn = !blinkOn;
+        if (blinkOn) playBlink();
+    }, 1100);
 }
 
 /**
@@ -128,8 +200,8 @@ function setupParticleBackground() {
     particleContainer.className = 'particle-bg';
     heroSection.appendChild(particleContainer);
     
-    // パーティクルを生成
-    for (let i = 0; i < 50; i++) {
+    // パーティクルを生成（控えめに）
+    for (let i = 0; i < 24; i++) {
         createParticle(particleContainer, i);
     }
     
@@ -210,9 +282,9 @@ function setupNavbarScrollEffect() {
     window.addEventListener('scroll', function() {
         // ナビゲーションバーの背景透明度調整
         if (window.scrollY > 50) {
-            navbar.style.backgroundColor = 'rgba(31, 41, 55, 0.95)';
+            navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.92)';
         } else {
-            navbar.style.backgroundColor = 'rgba(31, 41, 55, 0.8)';
+            navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
         }
         
         // アクティブセクションのハイライト
@@ -253,7 +325,7 @@ function setupSkillBarsAnimation() {
                 setTimeout(() => {
                     bar.style.width = width;
                     // ちょっとした音効果的な視覚効果
-                    bar.style.boxShadow = '0 0 20px rgba(79, 70, 229, 0.8)';
+                    bar.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.8)';
                     setTimeout(() => {
                         bar.style.boxShadow = '';
                     }, 500);
@@ -475,9 +547,9 @@ function setupNavbarScrollEffect() {
     window.addEventListener('scroll', function() {
         // ナビゲーションバーの背景透明度調整
         if (window.scrollY > 50) {
-            navbar.style.backgroundColor = 'rgba(15, 15, 26, 0.95)';
+            navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.92)';
         } else {
-            navbar.style.backgroundColor = 'rgba(15, 15, 26, 0.7)';
+            navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
         }
         
         // アクティブセクションのハイライト
