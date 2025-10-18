@@ -59,7 +59,10 @@ function setupSoundEngine() {
 
 function setupSoundToggle() {
     const btn = document.getElementById('sound-toggle');
-    if (!btn) return;
+    if (!btn) {
+        console.error('Sound toggle button not found!');
+        return;
+    }
     const icon = btn.querySelector('i');
     const applyIcon = () => {
         if (soundEnabled) {
@@ -71,6 +74,7 @@ function setupSoundToggle() {
             icon.classList.add('bi-volume-mute');
             btn.setAttribute('aria-label', 'Sound off');
         }
+        console.log(`Sound is now ${soundEnabled ? 'enabled' : 'disabled'}`);
     };
     applyIcon();
     btn.addEventListener('click', () => {
@@ -81,8 +85,10 @@ function setupSoundToggle() {
         if (soundEnabled) {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('AudioContext initialized.');
             } else if (audioCtx.state === 'suspended') {
                 audioCtx.resume && audioCtx.resume();
+                console.log('AudioContext resumed.');
             }
             // 確認音
             setTimeout(() => playClick(900, 0.04, 0.03), 50);
@@ -92,7 +98,11 @@ function setupSoundToggle() {
 
 // 簡易シンセ：短いクリック音（キータイプ）とクリック音（ブリンク）
 function playClick(freq = 800, duration = 0.03, gain = 0.03) {
-    if (!soundEnabled || !audioCtx) return;
+    if (!soundEnabled || !audioCtx) {
+        console.warn('Sound is disabled or AudioContext is not initialized.');
+        return;
+    }
+    console.log(`Playing click sound at ${freq} Hz for ${duration} seconds.`);
     const osc = audioCtx.createOscillator();
     const g = audioCtx.createGain();
     osc.type = 'square';
