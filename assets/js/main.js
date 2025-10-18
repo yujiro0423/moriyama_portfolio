@@ -225,13 +225,14 @@ function setupCursorBlinkSound() {
     soundSettings.id = 'sound-settings';
     soundSettings.style.display = 'none';
     soundSettings.style.position = 'fixed';
-    soundSettings.style.top = '50px';
+    // ナビバーと重ならないように、少し下げて最前面に配置
+    soundSettings.style.top = '72px';
     soundSettings.style.right = '10px';
     soundSettings.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
     soundSettings.style.color = 'white';
     soundSettings.style.padding = '10px';
     soundSettings.style.borderRadius = '5px';
-    soundSettings.style.zIndex = '1000';
+    soundSettings.style.zIndex = '2001';
     soundSettings.innerHTML = `
         <h4>Sound Settings</h4>
         <label for="bpm-input">BPM (Beats Per Minute):</label>
@@ -259,11 +260,62 @@ function setupCursorBlinkSound() {
         localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled));
     });
 
-    // サウンド設定ボタンのトグル
-    const soundSettingsButton = document.getElementById('sound-settings-button');
-    soundSettingsButton.addEventListener('click', () => {
-        soundSettings.style.display = soundSettings.style.display === 'none' ? 'block' : 'none';
-    });
+    // ボタンのクリックハンドラは setupSoundSettings 側で一元管理する
+}
+
+/**
+ * サウンド設定ボタンとパネルの初期化・表示制御
+ * - ボタンが無ければ生成
+ * - ナビバーに隠れないように位置とz-indexを調整
+ * - クリックで #sound-settings をトグル
+ */
+function setupSoundSettings() {
+    let btn = document.getElementById('sound-settings-button');
+    if (!btn) {
+        // 念のため動的に作成（HTMLに無い場合の対策）
+        btn = document.createElement('button');
+        btn.id = 'sound-settings-button';
+        btn.textContent = 'Sound Settings';
+        document.body.appendChild(btn);
+    }
+
+    // 目立つように固定配置と最前面を指定（CSSが無くても効くようにインラインで設定）
+    btn.style.position = 'fixed';
+    btn.style.top = '72px';
+    btn.style.right = '16px';
+    btn.style.zIndex = '2000';
+    if (!btn.style.padding) btn.style.padding = '8px 12px';
+    if (!btn.style.backgroundColor) btn.style.backgroundColor = 'rgba(0,0,0,0.85)';
+    if (!btn.style.color) btn.style.color = '#e6f1ee';
+    if (!btn.style.border) btn.style.border = '1px solid rgba(0,255,136,0.35)';
+    if (!btn.style.borderRadius) btn.style.borderRadius = '8px';
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('aria-controls', 'sound-settings');
+
+    // 二重登録防止
+    if (!btn.dataset.ssInit) {
+        const toggle = () => {
+            const panel = document.getElementById('sound-settings');
+            if (!panel) {
+                // パネルがまだ生成前（初回ロード直後など）の場合は少し待って再試行
+                setTimeout(toggle, 300);
+                return;
+            }
+            // パネルがナビに隠れないよう安全側で上書き
+            panel.style.top = panel.style.top || '72px';
+            panel.style.zIndex = panel.style.zIndex || '2001';
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        };
+        btn.addEventListener('click', toggle);
+        // Alt+S で開閉（アクセシビリティ向上＆デバッグ用）
+        window.addEventListener('keydown', (e) => {
+            if ((e.altKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                toggle();
+            }
+        });
+        btn.dataset.ssInit = '1';
+    }
 }
 
 /**
