@@ -30,6 +30,7 @@ function initializePortfolio() {
     setupParticleBackground();
     setupSoundEngine();
     setupSoundToggle();
+    setupSoundSettings();
     
     console.log('✨ Portfolio initialized with awesome effects! ✨');
 }
@@ -42,7 +43,10 @@ let soundEnabled = true;
 function setupSoundEngine() {
     try {
         soundEnabled = JSON.parse(localStorage.getItem('soundEnabled') ?? 'true');
-    } catch (_) { soundEnabled = true; }
+    } catch (_) {
+        soundEnabled = true;
+    }
+
     // ユーザー操作で初期化：初回操作でAudioContextを作る
     const resume = () => {
         if (!audioCtx) {
@@ -91,7 +95,7 @@ function setupSoundToggle() {
                 console.log('AudioContext resumed.');
             }
             // 確認音
-            setTimeout(() => playClick(900, 0.04, 0.03), 50);
+            setTimeout(() => playClick(900, 0.04, 3), 50);
         }
     });
 }
@@ -189,35 +193,105 @@ function setupScrollReveal() {
 }
 
 /**
+ * カーソル点滅音を物理的なチッチッという音に変更し、4拍子で音色を変える
+ */
+function setupCursorBlinkSound() {
+    let bpm = 60; // 初期BPM
+    const blinkInterval = () => (60000 / bpm); // ミリ秒計算
+    let beatCount = 0; // 拍子カウント
+
+    const playMetronomeSound = () => {
+        if (!soundEnabled || !audioCtx) return;
+
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(beatCount === 0 ? 880 : 440, audioCtx.currentTime); // 1拍目は高音、それ以外は低音
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+
+        osc.connect(gainNode).connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+
+        beatCount = (beatCount + 1) % 4; // 4拍子でリセット
+    };
+
+    let blinkTimer = setInterval(playMetronomeSound, blinkInterval());
+
+    // サウンド設定UIを作成
+    const soundSettings = document.createElement('div');
+    soundSettings.id = 'sound-settings';
+    soundSettings.style.display = 'none';
+    soundSettings.style.position = 'fixed';
+    soundSettings.style.top = '50px';
+    soundSettings.style.right = '10px';
+    soundSettings.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    soundSettings.style.color = 'white';
+    soundSettings.style.padding = '10px';
+    soundSettings.style.borderRadius = '5px';
+    soundSettings.style.zIndex = '1000';
+    soundSettings.innerHTML = `
+        <h4>Sound Settings</h4>
+        <label for="bpm-input">BPM (Beats Per Minute):</label>
+        <input id="bpm-input" type="number" min="30" max="240" value="${bpm}" style="width: 60px;">
+        <br>
+        <label for="mute-toggle">Mute All Sounds:</label>
+        <input id="mute-toggle" type="checkbox" ${soundEnabled ? '' : 'checked'}>
+    `;
+    document.body.appendChild(soundSettings);
+
+    const bpmInput = document.getElementById('bpm-input');
+    const muteToggle = document.getElementById('mute-toggle');
+
+    bpmInput.addEventListener('input', () => {
+        const newBpm = parseInt(bpmInput.value, 10);
+        if (newBpm >= 30 && newBpm <= 240) {
+            bpm = newBpm;
+            clearInterval(blinkTimer);
+            blinkTimer = setInterval(playMetronomeSound, blinkInterval());
+        }
+    });
+
+    muteToggle.addEventListener('change', () => {
+        soundEnabled = !muteToggle.checked;
+        localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled));
+    });
+
+    // サウンド設定ボタンのトグル
+    const soundSettingsButton = document.getElementById('sound-settings-button');
+    soundSettingsButton.addEventListener('click', () => {
+        soundSettings.style.display = soundSettings.style.display === 'none' ? 'block' : 'none';
+    });
+}
+
+/**
  * タイピングエフェクトの設定
  */
 function setupTypingEffect() {
     const typingElement = document.querySelector('.typing-effect');
     if (!typingElement) return;
-    
+
     const text = typingElement.textContent;
     typingElement.textContent = '';
-    
+
     let index = 0;
     const typeCharacter = () => {
         if (index < text.length) {
             typingElement.textContent += text.charAt(index);
             index++;
             // タイプ音
-            playClick(700 + Math.random()*200, 0.025, 0.025);
-            setTimeout(typeCharacter, 90 + Math.random()*60);
+            playClick(700 + Math.random() * 200, 0.025, 0.025);
+            setTimeout(typeCharacter, 90 + Math.random() * 60);
         }
     };
-    
+
     // 少し遅延してからタイピングを開始
     setTimeout(typeCharacter, 1000);
 
-    // カーソル点滅に合わせて微音（30fps程度は重いのでsetIntervalで控えめ）
-    let blinkOn = false;
-    setInterval(() => {
-        blinkOn = !blinkOn;
-        if (blinkOn) playBlink();
-    }, 1100);
+    // カーソル点滅音を設定
+    setupCursorBlinkSound();
 }
 
 /**
