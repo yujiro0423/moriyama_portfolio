@@ -98,9 +98,17 @@ function setupSoundToggle() {
 
 // 簡易シンセ：短いクリック音（キータイプ）とクリック音（ブリンク）
 function playClick(freq = 800, duration = 0.03, gain = 0.03) {
-    if (!soundEnabled || !audioCtx) {
-        console.warn('Sound is disabled or AudioContext is not initialized.');
+    if (!soundEnabled) {
+        console.warn('Sound is disabled. Skipping playClick.');
         return;
+    }
+    if (!audioCtx) {
+        console.error('AudioContext is not initialized. Attempting to initialize.');
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) {
+            console.error('Failed to initialize AudioContext.');
+            return;
+        }
     }
     console.log(`Playing click sound at ${freq} Hz for ${duration} seconds.`);
     const osc = audioCtx.createOscillator();
