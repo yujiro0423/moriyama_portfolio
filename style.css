@@ -571,7 +571,8 @@ footer a:hover {
 /* タイピングエフェクト */
 .typing-effect {
     border-right: 3px solid var(--primary-color);
-    animation: blink 1.1s infinite steps(1);
+    /* アニメーション時間を CSS 変数で制御（JSから同期可能） */
+    animation: blink var(--cursor-blink, 1.1s) infinite steps(1);
 }
 
 @keyframes blink {

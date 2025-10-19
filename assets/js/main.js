@@ -245,14 +245,31 @@ function setupCursorBlinkSound() {
     const bpmInput = document.getElementById('bpm-input');
     const muteToggle = document.getElementById('mute-toggle');
 
+    const syncCursorBlinkToBpm = (currentBpm) => {
+        // 1/2拍〜1拍程度でカーソルの点滅が自然に見えるように調整
+        // cursorBlinkSec は秒単位
+        const beatsPerSecond = currentBpm / 60;
+        // ここでは1拍ごとにCursorを1回点滅させる想定
+        let cursorBlinkSec = 1 / beatsPerSecond; // 例: 60bpm -> 1s
+        // 適度な範囲にクランプ
+        cursorBlinkSec = Math.max(0.2, Math.min(1.5, cursorBlinkSec));
+        // CSS変数に反映
+        document.documentElement.style.setProperty('--cursor-blink', `${cursorBlinkSec}s`);
+    };
+
     bpmInput.addEventListener('input', () => {
         const newBpm = parseInt(bpmInput.value, 10);
         if (newBpm >= 30 && newBpm <= 240) {
             bpm = newBpm;
             clearInterval(blinkTimer);
             blinkTimer = setInterval(playMetronomeSound, blinkInterval());
+            // カーソル点滅の同期
+            syncCursorBlinkToBpm(bpm);
         }
     });
+
+    // 初期同期
+    syncCursorBlinkToBpm(bpm);
 
     muteToggle.addEventListener('change', () => {
         soundEnabled = !muteToggle.checked;
