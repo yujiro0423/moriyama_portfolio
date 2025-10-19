@@ -29,7 +29,6 @@ function initializePortfolio() {
     setupTypingEffect();
     setupParticleBackground();
     setupSoundEngine();
-    setupSoundToggle();
     setupSoundSettings();
     
     console.log('✨ Portfolio initialized with awesome effects! ✨');
@@ -279,11 +278,19 @@ function setupSoundSettings() {
         document.body.appendChild(btn);
     }
 
-    // 目立つように固定配置と最前面を指定（CSSが無くても効くようにインラインで設定）
-    btn.style.position = 'fixed';
-    btn.style.top = '72px';
-    btn.style.right = '16px';
-    btn.style.zIndex = '2000';
+    // 目立つように固定配置をデフォルトにするが、
+    // もしボタンがナビ内に配置されている（DOM上で親が .navbar 等）なら固定スタイルは付けない
+    const isInNavbar = btn.closest && btn.closest('.navbar');
+    if (!isInNavbar) {
+        btn.style.position = 'fixed';
+        btn.style.top = '72px';
+        btn.style.right = '16px';
+        btn.style.zIndex = '2000';
+    } else {
+        // ナビ内なら見た目をnavbarに馴染ませる（小さいボタン）
+        btn.classList.add('btn', 'btn-sm', 'btn-outline-custom', 'ms-3');
+        btn.style.zIndex = '2000';
+    }
     if (!btn.style.padding) btn.style.padding = '8px 12px';
     if (!btn.style.backgroundColor) btn.style.backgroundColor = 'rgba(0,0,0,0.85)';
     if (!btn.style.color) btn.style.color = '#e6f1ee';
