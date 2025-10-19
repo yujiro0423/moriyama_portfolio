@@ -576,8 +576,15 @@ footer a:hover {
     animation: blink var(--cursor-blink, 1.1s) infinite steps(1);
 }
 
+/* 4拍目に強調表示するためのクラス
+   - アニメーションを一時停止して、border を赤にする */
+.typing-effect.cursor-accent {
+    animation: none !important;
+    border-right-color: red !important;
+}
+
 @keyframes blink {
-    0%, 50% { border-color: var(--primary-color); }
+    0%, 50% { border-color: var(--cursor-border-color, var(--primary-color)); }
     51%, 100% { border-color: transparent; }
 }
 

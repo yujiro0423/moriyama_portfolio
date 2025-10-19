@@ -200,30 +200,43 @@ function setupCursorBlinkSound() {
     let beatCount = 0; // 拍子カウント
 
     const playMetronomeSound = () => {
-        // サウンドが無効でも視覚の同期は行いたい
-        if (!audioCtx && soundEnabled) return;
-
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-
-        osc.type = 'square';
-        // 4拍子目（index 3）で色と音を変化させる
         const isAccented = (beatCount === 3);
-        osc.frequency.setValueAtTime(isAccented ? 880 : 440, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(isAccented ? 0.12 : 0.08, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
 
-        osc.connect(gainNode).connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
+        // 音声は audioCtx と soundEnabled の両方が有効な場合のみ鳴らす
+        // 再生長さを変数化して、視覚の強調時間に合わせる
+        const audioDuration = 0.1; // 秒
+        let visualDurationMs = 150; // デフォルトの視覚強調時間（ms）
+        if (audioCtx && soundEnabled) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(isAccented ? 880 : 440, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(isAccented ? 0.12 : 0.08, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + audioDuration);
+                osc.connect(gainNode).connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + audioDuration);
+                visualDurationMs = Math.max(40, Math.round(audioDuration * 1000));
+            } catch (e) {
+                // Audio ノード作成でエラーが出ても視覚同期は続ける
+                console.warn('Metronome audio error:', e);
+            }
+        }
 
-        // 視覚同期: 4拍目（isAccented）にカーソルを赤くする
+        // 視覚同期: 4拍目（isAccented）にカーソルを赤くする（音が無くても行う）
         if (isAccented) {
-            document.documentElement.style.setProperty('--cursor-border-color', 'red');
-            // 短時間後に元に戻す（0.15s）
-            setTimeout(() => {
-                document.documentElement.style.setProperty('--cursor-border-color', 'var(--primary-color)');
-            }, 150);
+            const typingEl = document.querySelector('.typing-effect');
+            if (typingEl) {
+                typingEl.classList.add('cursor-accent');
+                setTimeout(() => typingEl.classList.remove('cursor-accent'), visualDurationMs);
+            } else {
+                // フォールバック：CSS変数で色変更
+                document.documentElement.style.setProperty('--cursor-border-color', 'red');
+                setTimeout(() => {
+                    document.documentElement.style.setProperty('--cursor-border-color', 'var(--primary-color)');
+                }, visualDurationMs);
+            }
         }
 
         beatCount = (beatCount + 1) % 4; // 4拍子でリセット
