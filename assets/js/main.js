@@ -200,19 +200,31 @@ function setupCursorBlinkSound() {
     let beatCount = 0; // 拍子カウント
 
     const playMetronomeSound = () => {
-        if (!soundEnabled || !audioCtx) return;
+        // サウンドが無効でも視覚の同期は行いたい
+        if (!audioCtx && soundEnabled) return;
 
         const osc = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
         osc.type = 'square';
-        osc.frequency.setValueAtTime(beatCount === 0 ? 880 : 440, audioCtx.currentTime); // 1拍目は高音、それ以外は低音
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        // 4拍子目（index 3）で色と音を変化させる
+        const isAccented = (beatCount === 3);
+        osc.frequency.setValueAtTime(isAccented ? 880 : 440, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(isAccented ? 0.12 : 0.08, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
 
         osc.connect(gainNode).connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.1);
+
+        // 視覚同期: 4拍目（isAccented）にカーソルを赤くする
+        if (isAccented) {
+            document.documentElement.style.setProperty('--cursor-border-color', 'red');
+            // 短時間後に元に戻す（0.15s）
+            setTimeout(() => {
+                document.documentElement.style.setProperty('--cursor-border-color', 'var(--primary-color)');
+            }, 150);
+        }
 
         beatCount = (beatCount + 1) % 4; // 4拍子でリセット
     };
