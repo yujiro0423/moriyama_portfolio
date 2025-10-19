@@ -198,6 +198,7 @@ function setupCursorBlinkSound() {
     let bpm = 60; // 初期BPM
     const blinkInterval = () => (60000 / bpm); // ミリ秒計算
     let beatCount = 0; // 拍子カウント
+    let accentTimeout = null; // 4拍目の強調を解除するためのタイマー
 
     const playMetronomeSound = () => {
         const isAccented = (beatCount === 3);
@@ -224,19 +225,47 @@ function setupCursorBlinkSound() {
             }
         }
 
-        // 視覚同期: 4拍目（isAccented）にカーソルを赤くする（音が無くても行う）
+        // 視覚同期: 各拍でクラスの付け外しを行い、4拍目(isAccented)の間は赤で固定する
+        const typingEl = document.querySelector('.typing-effect');
+        const removeAccent = () => {
+            if (typingEl) {
+                typingEl.classList.remove('cursor-accent');
+                try {
+                    // アニメーションを確実に再開させるために inline の animation をリセットして強制リフロー
+                    typingEl.style.animation = '';
+                    /* eslint-disable no-unused-expressions */
+                    void typingEl.offsetWidth;
+                    /* eslint-enable no-unused-expressions */
+                } catch (e) {
+                    // silent
+                }
+            } else {
+                document.documentElement.classList.remove('cursor-accent-global');
+                // フォールバックで CSS 変数を書き換えている可能性があるためクリア
+                document.documentElement.style.removeProperty('--cursor-border-color');
+            }
+            if (accentTimeout) {
+                clearTimeout(accentTimeout);
+                accentTimeout = null;
+            }
+        };
+
         if (isAccented) {
-            const typingEl = document.querySelector('.typing-effect');
+            // 強調を付与
             if (typingEl) {
                 typingEl.classList.add('cursor-accent');
-                setTimeout(() => typingEl.classList.remove('cursor-accent'), visualDurationMs);
             } else {
-                // フォールバック：CSS変数で色変更
-                document.documentElement.style.setProperty('--cursor-border-color', 'red');
-                setTimeout(() => {
-                    document.documentElement.style.setProperty('--cursor-border-color', 'var(--primary-color)');
-                }, visualDurationMs);
+                document.documentElement.classList.add('cursor-accent-global');
             }
+            // 念のため、次の拍のタイミングで確実に外すタイマーをセット
+            if (accentTimeout) {
+                clearTimeout(accentTimeout);
+            }
+            const intervalMs = Math.max(40, blinkInterval());
+            accentTimeout = setTimeout(removeAccent, intervalMs - 10);
+        } else {
+            // 非強調のときは即時で外す
+            removeAccent();
         }
 
         beatCount = (beatCount + 1) % 4; // 4拍子でリセット
